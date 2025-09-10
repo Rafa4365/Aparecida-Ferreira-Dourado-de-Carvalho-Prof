@@ -35,3 +35,40 @@
     <pages controlRenderingCompatibilityVersion="4.0"/>
   </system.web>
 </configuration>
+
+using System;
+using System.Data.SqlClient;
+using System.Web.UI;
+
+public partial class _Default : Page
+{
+    protected void btnCadastrar_Click(object sender, EventArgs e)
+    {
+        string nome = txtNome.Value;
+        string email = txtEmail.Value;
+        string senha = txtSenha.Value;
+
+        string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexaoDB"].ConnectionString;
+
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO Usuarios (Nome, Email, Senha) VALUES (@Nome, @Email, @Senha)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Nome", nome);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Senha", senha); // OBS: Não armazene senhas em texto puro!
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                mensagem.InnerHtml = "<span style='color:green;'>Usuário cadastrado com sucesso!</span>";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensagem.InnerHtml = $"<span style='color:red;'>Erro ao cadastrar: {ex.Message}</span>";
+        }
+    }
+}
+
