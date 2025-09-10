@@ -71,4 +71,10 @@ public partial class _Default : Page
         }
     }
 }
+CREATE TABLE Usuarios (
+    Id INT IDENTITY PRIMARY KEY,
+    Nome NVARCHAR(100),
+    Email NVARCHAR(100),
+    Senha NVARCHAR(255)
+);
 
